@@ -26,7 +26,7 @@ if __name__ == '__main__':
     checkpoint_path = Path(EXPER_PATH, export_name)
 
     with get_model(config['model']['name'])(
-            data_shape={'image': [None, None, None, 1]},
+            data_shape={'image': [1, 240, 320, 1]},
             **config['model']) as net:
 
         net.load(str(checkpoint_path)) # defined in base_model.py, basically tf.train.Saver and saver.restore
