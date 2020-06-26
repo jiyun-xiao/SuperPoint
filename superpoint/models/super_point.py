@@ -7,7 +7,7 @@ from . import utils
 
 class SuperPoint(BaseModel):
     input_spec = {
-            'image': {'shape': [None, None, None, 1], 'type': tf.float32}
+            'image': {'shape': [1, 240, 640, 1], 'type': tf.float32}
     }
     required_config_keys = []
     default_config = {
