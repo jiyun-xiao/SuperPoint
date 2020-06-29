@@ -14,9 +14,9 @@ def detector_head(inputs, **config):
 
     with tf.variable_scope('detector', reuse=tf.AUTO_REUSE):
         x = vgg_block(inputs, 256, 3, 'conv1',
-                      activation=tf.nn.relu, **params_conv)
+                      True, **params_conv)
         x = vgg_block(x, 1+pow(config['grid_size'], 2), 1, 'conv2',
-                      activation=None, **params_conv)
+                      False, **params_conv)
 
         prob = tf.nn.softmax(x, axis=cindex)
         # Strip the extra “no interest point” dustbin
@@ -38,9 +38,9 @@ def descriptor_head(inputs, **config):
 
     with tf.variable_scope('descriptor', reuse=tf.AUTO_REUSE):
         x = vgg_block(inputs, 256, 3, 'conv1',
-                      activation=tf.nn.relu, **params_conv)
+                      True, **params_conv)
         x = vgg_block(x, config['descriptor_size'], 1, 'conv2',
-                      activation=None, **params_conv)
+                      False, **params_conv)
 
         desc = tf.transpose(x, [0, 2, 3, 1]) if cfirst else x
         desc = tf.image.resize_bilinear(
@@ -149,7 +149,6 @@ def spatial_nms(prob, size):
     """Performs non maximum suppression on the heatmap using max-pooling. This method is
     faster than box_nms, but does not suppress contiguous that have the same probability
     value.
-
     Arguments:
         prob: the probability heatmap, with shape `[H, W]`.
         size: a scalar, the size of the pooling window.
@@ -167,7 +166,6 @@ def box_nms(prob, size, iou=0.1, min_prob=0.01, keep_top_k=0):
     """Performs non maximum suppression on the heatmap by considering hypothetical
     bounding boxes centered at each pixel's location (e.g. corresponding to the receptive
     field). Optionally only keeps the top k detections.
-
     Arguments:
         prob: the probability heatmap, with shape `[H, W]`.
         size: a scalar, the size of the bouding boxes.
