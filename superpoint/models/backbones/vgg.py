@@ -12,8 +12,7 @@ def vgg_block(inputs, filters, kernel_size, name, activate, data_format, trainin
             x = tfl.batch_normalization(
                     x, training=training, name='bn', fused=True,
                     axis=1 if data_format == 'channels_first' else -1)
-        if activate:
-            x = tf.nn.relu(x)
+        x = tf.nn.relu(x)
     return x
 
 
